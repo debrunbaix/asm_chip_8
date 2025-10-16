@@ -4,18 +4,21 @@
 chip8-emulator/
 │
 ├── src/
-│   ├── asm/                    # Code assembleur
+│   ├── asm/                   # Code assembleur
 │   │   ├── core.asm           # Point d'entrée principal
 │   │   ├── cpu.asm            # Fetch-decode-execute cycle
-│   │   ├── opcodes.asm        # Implémentation des 35 opcodes
+│   │   ├── opcodes/           # Implémentation des 35 opcodes
+│   │   │   ├── opcode_1.asm   
+│   │   │   ├── ....
 │   │   ├── memory.asm         # Gestion mémoire (4Ko)
 │   │   └── timers.asm         # Timers delay/sound
 │   │
-│   └── wrapper/                # Interface graphique (C/C++)
-│       ├── main.cpp           # Point d'entrée wrapper
-│       ├── display.cpp        # Affichage 64x32 (SDL2/SFML)
-│       ├── input.cpp          # Clavier hexadécimal
-│       └── bridge.cpp         # Interface avec l'ASM
+│   └── wrapper/               # Interface graphique (C/C++)
+│       ├── main.c           # Point d'entrée wrapper
+│       ├── display.c        # Affichage 64x32 (SDL2/SFML)
+│       ├── input.c          # Clavier hexadécimal
+│       ├── bridge.c          # interface avec l'asm
+│       └── audio.c         # gestion audio
 │
 ├── roms/                       # ROMs de test
 │   ├── test_opcode.ch8
