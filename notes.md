@@ -3,35 +3,46 @@
 ```bash
 chip8-emulator/
 │
+├── README.md
+├── Makefile
+├── LICENSE
+│
+├── include/
+│   ├── chip8.h              # Déclarations des fonctions ASM exposées
+│   ├── display.h            # Interface d'affichage (C)
+│   └── audio.h              # Interface audio (C)
+│
 ├── src/
-│   ├── asm/                   # Code assembleur
-│   │   ├── core.asm           # Point d'entrée principal
-│   │   ├── cpu.asm            # Fetch-decode-execute cycle
-│   │   ├── opcodes/           # Implémentation des 35 opcodes
-│   │   │   ├── opcode_1.asm   
-│   │   │   ├── ....
-│   │   ├── memory.asm         # Gestion mémoire (4Ko)
-│   │   └── timers.asm         # Timers delay/sound
+│   ├── asm/
+│   │   ├── main.asm         # Point d'entrée principal (ASM)
+│   │   ├── cpu.asm          # Émulation CPU et cycle fetch-decode-execute
+│   │   ├── opcodes.asm      # Implémentation des instructions CHIP-8
+│   │   ├── memory.asm       # Gestion de la RAM (4KB)
+│   │   ├── registers.asm    # Gestion des registres V0-VF, I, PC, SP
+│   │   ├── timers.asm       # Timers delay et sound
+│   │   ├── stack.asm        # Gestion de la pile
+│   │   └── utils.asm        # Fonctions utilitaires
 │   │
-│   └── wrapper/               # Interface graphique (C/C++)
-│       ├── main.c           # Point d'entrée wrapper
-│       ├── display.c        # Affichage 64x32 (SDL2/SFML)
-│       ├── input.c          # Clavier hexadécimal
-│       ├── bridge.c          # interface avec l'asm
-│       └── audio.c         # gestion audio
+│   └── c/
+│       ├── display.c        # Implémentation SDL2/SFML pour l'affichage
+│       └── audio.c          # Implémentation audio (beep du timer)
 │
-├── roms/                       # ROMs de test
-│   ├── test_opcode.ch8
-│   ├── pong.ch8
-│   └── ...
+├── roms/
+│   ├── test/
+│   │   └── test_opcode.ch8  # ROMs de test
+│   └── games/
+│       ├── pong.ch8
+│       ├── tetris.ch8
+│       └── space_invaders.ch8
 │
-├── tests/
-│   └── unit_tests.asm         # Tests unitaires des opcodes
+├── data/
+│   └── font.bin             # Police sprite CHIP-8 (0-F)
 │
-├── docs/
-│   ├── rapport.md
-│   └── architecture.pdf
+├── build/
+│   └── .gitkeep
 │
-├── Makefile                    # Build system
-└── README.md
+└── docs/
+    ├── CHIP8_SPEC.md        # Spécifications CHIP-8
+    ├── OPCODES.md           # Liste des opcodes
+    └── ARCHITECTURE.md      # Documentation de l'architecture
 ```
