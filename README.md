@@ -109,7 +109,10 @@ CHIP-8 Keypad          Keyboard Mapping
 .
 ├── Makefile
 ├── include/
-│   └── display.h           # Display interface header
+│   ├── display.h           # Display interface header
+│   ├── input.h             # Keyboard input header
+│   ├── audio.h             # Audio/beep header
+│   └── timers.h            # Timers header
 ├── src/
 │   ├── asm/
 │   │   ├── main.s          # Entry point and main loop
@@ -136,7 +139,10 @@ CHIP-8 Keypad          Keyboard Mapping
 │   │       ├── op_EXxx.s   # Key press operations
 │   │       └── op_FXxx.s   # Misc operations (timers, I, BCD, etc.)
 │   └── c/
-│       └── display.c       # Raylib graphics and audio
+│       ├── display.c       # Raylib window, pixel rendering
+│       ├── input.c         # Keyboard to CHIP-8 keypad mapping
+│       ├── audio.c         # 440Hz beep generation and playback
+│       └── timers.c        # Delay and sound timer management
 └── roms/
     ├── games/              # Game ROMs
     │   ├── space_invaders.ch8

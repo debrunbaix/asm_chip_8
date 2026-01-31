@@ -1,10 +1,15 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <stdint.h>
+
 // Fonctions d'interface graphique pour l'emulateur CHIP-8
 // Implementation avec Raylib
 
-// Initialise la fenetre d'affichage
+// Definit la couleur des pixels (format 0xRRGGBB)
+void set_pixel_color(uint32_t hex_color);
+
+// Initialise la fenetre d'affichage et l'audio
 // Retourne 1 en cas de succes, 0 en cas d'erreur
 int init_display(void);
 

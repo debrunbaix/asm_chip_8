@@ -1,0 +1,12 @@
+flowchart TD
+    UPD["<b>update_keypad()</b><br/>Appèle 60 fois par seconde"] --> LOOP["Pour chaque touche i (0 a F)"]
+    LOOP --> CHECK["Vérifier si la touche physique<br/>correspondante est enfoncée<br/><i>Via Raylib : IsKeyDown()</i>"]
+    CHECK --> SET{"Touche<br/>enfoncee ?"}
+    SET -->|Oui| ON["KEYPAD[i] = 1"]
+    SET -->|Non| OFF["KEYPAD[i] = 0"]
+    ON --> NEXT["Touche suivante"]
+    OFF --> NEXT
+    NEXT --> LOOP
+
+    style UPD fill:#2E7D32,color:#fff
+

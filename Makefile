@@ -46,7 +46,10 @@ OPCODES_SRCS = $(OPCODES_DIR)/dispatcher.s \
                $(OPCODES_DIR)/op_FXxx.s
 
 # Fichiers sources C
-C_SRCS = $(C_DIR)/display.c
+C_SRCS = $(C_DIR)/display.c \
+         $(C_DIR)/input.c \
+         $(C_DIR)/audio.c \
+         $(C_DIR)/timers.c
 
 # Fichiers objets
 ASM_OBJS = $(ASM_SRCS:$(ASM_DIR)/%.s=$(BUILD_DIR)/%.o)

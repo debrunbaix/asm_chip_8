@@ -1,0 +1,32 @@
+flowchart TD
+    A["<b>Utilisateur lance la commande</b><br/>./chip8_emu ma_rom.ch8 FF0000"] --> B{"Verification<br/>des arguments"}
+    B -->|"Moins de 2 args"| C["Affiche message d'erreur :<br/><i>Usage: ./chip8_emu rom_file color</i>"]
+    C --> D["Programme se termine<br/>code erreur 1"]
+
+    B -->|"2 args ou plus"| E["<b>Phase d'initialisation</b><br/>Preparation de tout le systeme"]
+    E --> F["Initialisation du CPU virtuel<br/><i>init_chip8</i>"]
+    F --> G["Chargement de la ROM en memoire<br/><i>rom_loader</i>"]
+    G --> H{"ROM chargee<br/>avec succes ?"}
+    H -->|Non| I["Erreur : impossible de lire le fichier"]
+    I --> D
+
+    H -->|Oui| J{"3eme argument<br/>present ?"}
+    J -->|Oui| K["Conversion de la couleur hexadecimale<br/>ex: FF0000 → Rouge"]
+    J -->|Non| L["Couleur par defaut : Blanc"]
+    K --> M["Initialisation de l'affichage<br/><i>init_display</i>"]
+    L --> M
+
+    M --> N["<b>BOUCLE PRINCIPALE</b><br/>Tourne 60 fois par seconde"]
+    N --> O{"L'utilisateur<br/>ferme la fenetre ?"}
+    O -->|Non| P["Executer 10 instructions du programme"]
+    P --> Q["Mettre a jour l'ecran, le clavier,<br/>les timers et le son"]
+    Q --> N
+
+    O -->|Oui| R["Nettoyage : fermer l'audio,<br/>fermer la fenetre"]
+    R --> S["Programme se termine<br/>code 0 - succes"]
+
+    style A fill:#4CAF50,color:#fff
+    style N fill:#FF9800,color:#fff
+    style S fill:#2196F3,color:#fff
+    style D fill:#f44336,color:#fff
+    style I fill:#f44336,color:#fff

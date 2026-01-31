@@ -1,0 +1,27 @@
+flowchart TD
+    subgraph FETCH["1 - FETCH (Lecture)"]
+        F1["Lire l'octet à MEMOIRE[PC]<br/><i>Partie haute de l'instruction</i>"]
+        F2["Lire l'octet à MEMOIRE[PC+1]<br/><i>Partie basse de l'instruction</i>"]
+        F3["Combiner les 2 octets :<br/><i>Ex: 0x12 et 0x34 → 0x1234</i>"]
+        F4["Avancer PC de 2<br/><i>PC pointe maintenant vers<br/>l'instruction suivante</i>"]
+        F1 --> F2 --> F3 --> F4
+    end
+
+    subgraph DECODE["2 - DECODE (Décodage)"]
+        D1["Extraire le 1er chiffre hex<br/><i>Ex: 0x<b>D</b>AB5 → D<br/>Le 'type' d'instruction</i>"]
+        D2["Extraire les operandes :<br/>X = 2e chiffre, Y = 3e chiffre<br/>NN = 2 derniers chiffres<br/>NNN = 3 derniers chiffres"]
+        D3["Trouver la bonne<br/>fonction à exécuter"]
+        D1 --> D2 --> D3
+    end
+
+    subgraph EXECUTE["3 - EXECUTE (Execution)"]
+        E1["Executer l'operation :<br/>calcul, saut, dessin, son..."]
+        E2["Modifier l'etat du CPU :<br/>registres, memoire, ecran..."]
+        E1 --> E2
+    end
+
+    FETCH --> DECODE --> EXECUTE
+
+    style FETCH fill:#4CAF50,color:#fff
+    style DECODE fill:#FF9800,color:#fff
+    style EXECUTE fill:#1565C0,color:#fff

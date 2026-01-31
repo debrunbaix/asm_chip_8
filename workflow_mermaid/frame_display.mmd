@@ -1,0 +1,31 @@
+flowchart TD
+    LOOP["<b>DEBUT D'UNE FRAME</b><br/>(1/60e de seconde)"] --> QUIT{"L'utilisateur a-t-il<br/>ferme la fenetre ?(ESC)"}
+
+    QUIT -->|Oui| EXIT["Nettoyage et sortie"]
+    QUIT -->|Non| COUNTER["Initialiser compteur = 0"]
+
+    COUNTER --> CHECK{"Compteur < 10 ?"}
+    CHECK -->|Non| RENDER["Passer au rendu"]
+    CHECK -->|Oui| FETCH["<b>FETCH</b><br/>Lire l'instruction<br/>à l'adresse PC"]
+
+    FETCH --> VALID{"Instruction<br/>valide ?"}
+    VALID -->|Non| INC["Incrémenter compteur"]
+    VALID -->|Oui| EXEC["<b>Identifier et exécuter<br/>l'instruction"]
+    EXEC --> INC
+    INC --> CHECK
+
+    RENDER --> KEYS["<b>Mise à jour du clavier</b><br/>Lire l'état des 16 touches"]
+    KEYS --> TIMERS["<b>Mise à jour des timers</b><br/>Decrémenter Delay et Sound<br/>de 1 si > 0"]
+    TIMERS --> BEEP{"Sound Timer > 0 ?"}
+    BEEP -->|Oui| PLAY["Jouer le BEEP"]
+    BEEP -->|Non| STOP["Arreter le BEEP"]
+    PLAY --> DRAW
+    STOP --> DRAW
+    DRAW["<b>Dessiner l'écran</b><br/>Parcourir les 64x32 pixels<br/>et afficher chaque pixel actif"] --> LOOP
+
+    style LOOP fill:#FF9800,color:#fff
+    style FETCH fill:#4CAF50,color:#fff
+    style EXEC fill:#1565C0,color:#fff
+    style DRAW fill:#7B1FA2,color:#fff
+    style EXIT fill:#f44336,color:#fff
+
