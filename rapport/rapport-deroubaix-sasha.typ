@@ -1,9 +1,6 @@
-// Rapport de projet - Emulateur CHIP-8 en assembleur x86-64
-// Utilisation: typst compile rapport-deroubaix-sasha.typ rapport.pdf
-
 #let project(
   title: "Conception d'un emulateur CHIP-8",
-  subtitle: "Projet assembleur x86-64",
+  subtitle: "Emulateur en assembleur x86-64",
   author: "Deroubaix Sasha",
   date: none,
   logo: none,
@@ -169,10 +166,6 @@
   author: "Deroubaix Sasha",
 )
 
-// ============================================================================
-// INTRODUCTION
-// ============================================================================
-
 = Introduction
 
 Ce rapport presente la conception et le developpement d'un emulateur (interpreteur) CHIP-8 ecrit en *assembleur x86-64* (NASM), avec une couche d'interface graphique et audio en C utilisant la bibliotheque *Raylib*. Le projet s'inscrit dans le cadre du module assembleur de Master 1.
@@ -275,10 +268,6 @@ L'assembleur appelle les fonctions C via le mecanisme standard `call` / `extern`
 #note[
   Le flag `-no-pie` est necessaire lors du linkage car l'assembleur utilise des adresses absolues pour acceder aux variables globales (MEMORY, REGISTERS, etc.). Sans ce flag, le linker genererait des erreurs de relocation.
 ]
-
-// ============================================================================
-// LE CPU VIRTUEL CHIP-8
-// ============================================================================
 
 = Le CPU virtuel CHIP-8
 
@@ -755,7 +744,7 @@ bool pixel_on = (DISPLAY[byte_index] >> bit_index) & 1;
 
 == Rendu avec Raylib
 
-A chaque frame, la fonction `render_display` parcourt les 2 048 pixels et dessine un carre colore pour chaque pixel allume :
+A chaque frame, la fonction `render_display` parcourt les pixels et dessine un carre colore pour chaque pixel allume :
 
 ```c
 void render_display(void) {
