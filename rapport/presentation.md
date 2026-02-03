@@ -24,6 +24,7 @@ Developpement d'un emulateur en assembleur x86-64
 7. Changement de couleur des pixels
 8. Demonstration
 9. Conclusion
+10. Questions
 
 ---
 
@@ -33,12 +34,23 @@ Developpement d'un emulateur en assembleur x86-64
 
 ## Qu'est-ce que le CHIP-8 ?
 
+<div class="columns">
+<div>
+
 - Langage interprété créé dans les **années 70**
-- Conçu pour simplifier le développement de jeux sur micro-ordinateurs
+- Conçu faire du developpement de jeu sur micro ordinateur.
 - Résolution **64×32 pixels** monochromes
 - **16 touches** d'entrée (0-F)
 - **35 opcodes** (instructions de 2 octets)
 - Utilisé sur : COSMAC VIP, Telmac 1800, HP-48
+
+</div>
+<div>
+
+<img src="assets/RCA_Cosmac_VIP.jpg" style="width: 70%;">
+
+</div>
+</div>
 
 ---
 
@@ -52,7 +64,6 @@ Developpement d'un emulateur en assembleur x86-64
 - **Registre I :** 16 bits (adressage)
 - **PC :** Program Counter (16 bits)
 - **Stack :** 16 niveaux
-- **Timers :** Delay + Sound (60 Hz)
 
 </div>
 <div>
@@ -74,60 +85,12 @@ Developpement d'un emulateur en assembleur x86-64
 
 ## Contraintes du projet
 
-- Emulateur écrit en **assembleur**
+- Emulateur/logique écrit en **assembleur**
 - Parties graphiques/audio en **C**
-- Mapping clavier QWERTY → clavier hexadécimal CHIP-8
 
 ---
 
 # Architecture du projet
-
----
-
-## Architecture du projet | Vue d'ensemble
-
-<div class="columns">
-<div>
-
-<div class="flow-group">
-<div class="flow-group-title">Assembleur x86-64</div>
-<div class="flow">
-<div class="flow-box">main.s</div>
-<div class="flow-arrow">↓ ↓ ↓</div>
-<div class="flow-row">
-<div class="flow-box">cpu.s</div>
-<div class="flow-box">chip8_state.s</div>
-<div class="flow-box">rom_loader.s</div>
-</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">dispatcher.s</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">opcodes/</div>
-</div>
-</div>
-
-</div>
-<div>
-
-<div class="flow-group">
-<div class="flow-group-title">C + Raylib</div>
-<div class="flow">
-<div class="flow-box">display.c</div>
-<div class="flow-arrow">↓ ↓ ↓</div>
-<div class="flow-row">
-<div class="flow-box">input.c</div>
-<div class="flow-box">timers.c</div>
-<div class="flow-box">audio.c</div>
-</div>
-</div>
-</div>
-
-<br>
-
-**main.s** appelle les fonctions C via les conventions d'appel x86-64 (System V ABI)
-
-</div>
-</div>
 
 ---
 
@@ -179,6 +142,53 @@ asm_chip_8/
 
 ---
 
+## Architecture du projet | Vue d'ensemble
+
+<div class="columns">
+<div>
+
+<div class="flow-group">
+<div class="flow-group-title">Assembleur x86-64</div>
+<div class="flow">
+<div class="flow-box">main.s</div>
+<div class="flow-arrow">↓ ↓ ↓</div>
+<div class="flow-row">
+<div class="flow-box">cpu.s</div>
+<div class="flow-box">chip8_state.s</div>
+<div class="flow-box">rom_loader.s</div>
+</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box">dispatcher.s</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box">opcodes/</div>
+</div>
+</div>
+
+</div>
+<div>
+
+<div class="flow-group">
+<div class="flow-group-title">C + Raylib</div>
+<div class="flow">
+<div class="flow-box">display.c</div>
+<div class="flow-arrow">↓ ↓ ↓</div>
+<div class="flow-row">
+<div class="flow-box">input.c</div>
+<div class="flow-box">timers.c</div>
+<div class="flow-box">audio.c</div>
+</div>
+</div>
+</div>
+
+<br>
+
+**main.s** appelle les fonctions C via les conventions d'appel x86-64 (System V ABI)
+
+</div>
+</div>
+
+---
+
 # Choix techniques
 
 ---
@@ -189,8 +199,8 @@ asm_chip_8/
 <div>
 
 **Assembleur x86-64 (NASM)**
-- Contrainte du projet
-- Contrôle total sur la mémoire
+- 20% ARM client (TechInsights)
+- Plus compétent sur ce langage
 
 **C pour le graphique**
 - Interfaçage avec Raylib simplifié
@@ -205,8 +215,8 @@ asm_chip_8/
 - API simple et directe
 
 **Compilation**
-- `nasm` → objets `.o` (ASM)
-- `gcc` → objets `.o` (C)
+- `nasm` -> objets `.o` (ASM)
+- `gcc` -> objets `.o` (C)
 - `gcc` link tout avec Raylib
 
 ```
@@ -305,17 +315,20 @@ Extraction du **premier nibble**
 </div>
 <div>
 
-- **V0-VE :** Registres généraux 8 bits
-- **VF :** Flag (carry, collision)
-- **I :** Adressage mémoire (16 bits)
-- **PC :** Compteur programme
-- **SP :** Pointeur de pile (0-15)
-
 **Initialisation `init_chip8` :**
 - PC → 0x200
 - Copie fontset en mémoire
 - Efface registres, display, keypad
 - Reset timers
+
+```as
+•••
+xor rax, rax
+mov rcx, 0x1000
+lea rdi, [rel MEMORY]
+rep stosb
+•••
+```
 
 </div>
 </div>
@@ -324,38 +337,13 @@ Extraction du **premier nibble**
 
 ## Fonctionnement | Chargement ROM (rom_loader.s)
 
-<div class="columns">
-<div>
+Chargement via **syscalls Linux**:
 
-Chargement via **syscalls Linux** directs (pas de libc) :
-
-1. `open()` 
-2. `read()` 
-3. `close()` 
+1. open() 
+2. read() 
+3. close() 
 
 La ROM est chargée directement à l'adresse `MEMORY + 0x200`
-
-</div>
-<div>
-
-<div class="flow">
-<div class="flow-box">open(rom_path)</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-diamond">Succès ?</div>
-<div class="flow-row">
-<div class="flow-label">Oui ↓</div>
-<div style="width:60px"></div>
-<div class="flow-label">Non → retourne 0</div>
-</div>
-<div class="flow-box">read(fd, MEMORY+0x200, 3584)</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">close(fd)</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">Retourne 1 (succès)</div>
-</div>
-
-</div>
-</div>
 
 ---
 
@@ -369,34 +357,17 @@ La ROM est chargée directement à l'adresse `MEMORY + 0x200`
 ```
 
 1. Parse arguments (ROM + couleur)
-2. `init_chip8()` → état CPU
-3. `rom_loader()` → ROM en mémoire
-4. `parse_hex_color()` → couleur pixels
-5. `init_display()` → fenêtre Raylib
+2. init\_chip8() → état CPU
+3. rom\_loader() → ROM en mémoire
+4. parse\_hex\_color() → couleur pixels
+5. init\_display() → fenêtre Raylib
 6. **Boucle** : 10 cycles + render
-7. `cleanup_display()` → fermeture
+7. cleanup\_display() → fermeture
 
 </div>
 <div>
 
-<div class="flow">
-<div class="flow-box">Parse args (ROM + couleur)</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">init_chip8()</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">rom_loader()</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">init_display()</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-diamond">Quit ?</div>
-<div class="flow-row">
-<div class="flow-label">Non → 10× fetch+exec → render → ↑</div>
-</div>
-<div class="flow-row">
-<div class="flow-label">Oui ↓</div>
-</div>
-<div class="flow-box">cleanup_display() → Exit</div>
-</div>
+<img src="assets/loop.png" style="width: 70%;">
 
 </div>
 </div>
@@ -407,117 +378,52 @@ La ROM est chargée directement à l'adresse `MEMORY + 0x200`
 
 ---
 
-## Opcodes | 2NNN / 00EE — Call & Return
-
-<div class="columns">
-<div>
-
-**2NNN — Call Subroutine :**
-- `STACK[SP] = PC`
-- `SP++`
-- `PC = NNN`
-
-**00EE — Return :**
-- `SP--`
-- `PC = STACK[SP]`
-
-Stack de **16 niveaux** (16 × 16 bits)
-
-</div>
-<div>
-
-<div class="flow-group">
-<div class="flow-group-title">2NNN — Call</div>
-<div class="flow">
-<div class="flow-box">STACK[SP] = PC</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">SP++</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">PC = NNN</div>
-</div>
-</div>
-<br>
-<div class="flow-group">
-<div class="flow-group-title">00EE — Return</div>
-<div class="flow">
-<div class="flow-box">SP--</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">PC = STACK[SP]</div>
-</div>
-</div>
-
-</div>
-</div>
-
----
-
 ## Opcodes | CXNN — Nombre aléatoire
 
 <div class="columns">
 <div>
 
-`VX = random() & NN`
-
-Utilise un **LFSR 64 bits** (Linear Feedback Shift Register) :
-
-```
-seed ^= (seed >> 2)
-seed ^= (seed >> 3)
-seed ^= (seed >> 5)
-seed <<= 1
-seed |= new_bit
-VX = (seed & 0xFF) & NN
-```
+- Algo LFSR
+- X = Registre cible
+- NN = masque
 
 </div>
 <div>
 
-<div class="flow">
-<div class="flow-box">Seed 64 bits</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">XOR shifts (>> 2, 3, 5)</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">Nouveau bit généré</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">seed = (seed &lt;&lt; 1) | bit</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">& 0xFF → & NN</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">VX = résultat</div>
-</div>
+<img src="assets/random.png" style="width: 70%;">
 
 </div>
 </div>
 
 ---
 
-## Opcodes | FX0A — Attendre une touche
+## Opcodes | 8XYx - Opérateurs arithmetiques.
 
 <div class="columns">
 <div>
 
-- Scan `KEYPAD[0..15]`
-- Si touche trouvée → `VX = index`
-- Si aucune touche → `PC -= 2`
-
-Le `PC -= 2` re-exécute la même instruction → **bloquant**
+- Premier bit (8) type d'opcode
+- dernier bit (x) type d'opération arithmetique
 
 </div>
 <div>
 
-<div class="flow">
-<div class="flow-box">FX0A exécuté</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">Scan KEYPAD[0..15]</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-diamond">Touche pressée ?</div>
-<div class="flow-row">
-<div class="flow-label">Oui → VX = key → Continue</div>
-</div>
-<div class="flow-row">
-<div class="flow-label">Non → PC -= 2 → ↑ re-exécute</div>
-</div>
-</div>
+```as
+.check_8XYx:
+    mov rax, r12
+    and rax, 0xF
+
+    •••
+
+    cmp rax, 0x0
+    je .do_8xy0
+    cmp rax, 0x1
+    je .do_8xy1
+    •••
+    •••
+    cmp rax, 0xE
+    je .do_8xyE
+```
 
 </div>
 </div>
@@ -648,11 +554,11 @@ DrawRectangle(
 
 **Difficultés :**
 - Debug assembleur x86-64
-- Interfaçage ASM ↔ C
+- Interfaçage ASM <-> C
 - Respect des conventions d'appel
 
 **Améliorations possibles :**
-- Sauvegarde d'état
+- Implementation ARM sur raspberry avec vrai clavier.
 - Interface de sélection de ROM
 
 </div>

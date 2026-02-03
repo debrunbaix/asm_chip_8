@@ -1115,6 +1115,7 @@ Ce projet a permis de concevoir un emulateur CHIP-8 fonctionnel en assembleur x8
 + Cowgod's CHIP-8 Technical Reference : #link("http://devernay.free.fr/hacks/chip8/C8TECH10.HTM")
 + CHIP-8 Wikipedia : #link("https://en.wikipedia.org/wiki/CHIP-8")
 + Tobias V. Langhoff, Guide to making a CHIP-8 emulator : #link("https://tobiasvl.github.io/blog/write-a-chip-8-emulator/")
++ Implementation LFSR : #Link"https://fr.wikipedia.org/wiki/Registre_%C3%A0_d%C3%A9calage_%C3%A0_r%C3%A9troaction_lin%C3%A9aire")
 + Documentation Raylib : #link("https://www.raylib.com/")
 + Documentation NASM : #link("https://www.nasm.us/doc/")
 + Intel x86-64 Architecture Manual : #link("https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html")
