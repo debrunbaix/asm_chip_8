@@ -1,6 +1,3 @@
-; op_5XY0.s - Skip if VX == VY (5XY0)
-; Skip l'instruction suivante si VX == VY
-
 extern REGISTERS
 extern PC
 

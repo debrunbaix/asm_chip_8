@@ -1,6 +1,3 @@
-; op_9XY0.s - Skip if VX != VY (9XY0)
-; Skip l'instruction suivante si VX != VY
-
 extern REGISTERS
 extern PC
 

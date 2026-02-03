@@ -1,6 +1,3 @@
-; op_4XNN.s - Skip if VX != NN (4XNN)
-; Skip l'instruction suivante si VX != NN
-
 extern REGISTERS
 extern PC
 

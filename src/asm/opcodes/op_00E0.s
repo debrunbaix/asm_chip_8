@@ -1,6 +1,3 @@
-; op_00E0.s - Clear Screen (00E0)
-; Met tous les pixels du buffer DISPLAY a 0
-
 extern DISPLAY
 
 global op_clear_screen

@@ -1,5 +1,3 @@
-; op_BNNN.s - Jump to V0 + NNN (BNNN)
-
 extern REGISTERS
 extern PC
 

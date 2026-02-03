@@ -1,5 +1,3 @@
-; op_EXxx.s - Keyboard opcodes (EX9E, EXA1)
-
 extern REGISTERS
 extern KEYPAD
 extern PC

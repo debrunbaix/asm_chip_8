@@ -37,7 +37,6 @@ op_or_vx_vy:
     movzx rcx, byte [rax + rsi]  ; VY
     or byte [rax + rdi], cl      ; VX = VX | VY
 
-    ; Note: Certaines implementations mettent VF a 0
     mov byte [rax + 0xF], 0
 
     leave
@@ -69,7 +68,6 @@ op_xor_vx_vy:
     movzx rcx, byte [rax + rsi]  ; VY
     xor byte [rax + rdi], cl     ; VX = VX ^ VY
 
-    ; Note: Certaines implementations mettent VF a 0
     mov byte [rax + 0xF], 0
 
     leave

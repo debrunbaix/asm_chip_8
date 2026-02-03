@@ -1,6 +1,3 @@
-; op_00EE.s - Return from subroutine (00EE)
-; Depile l'adresse de retour et la place dans PC
-
 extern CH8_SP
 extern STACK
 extern PC

@@ -1,6 +1,3 @@
-; main.s - Point d'entree principal de l'emulateur CHIP-8
-; Le main reste en assembleur, la partie graphique est geree en C via Raylib
-
 extern init_chip8
 extern rom_loader
 extern fetch_opcode
@@ -34,7 +31,7 @@ main:
     push r13
     push r14
     push r15
-    sub rsp, 16                 ; Alignement stack 16 bytes (5 pushs + ret = 48, +16 = 64)
+    sub rsp, 16
 
     ; Sauvegarder argc et argv
     mov r14, rdi                ; r14 = argc
@@ -55,7 +52,7 @@ main:
     call init_chip8
 
     ; Charger la ROM (argv[1] = chemin de la ROM)
-    mov rdi, [r15 + 8]          ; argv[1] est a argv + 8 bytes (pointeur 64-bit)
+    mov rdi, [r15 + 8]
     call rom_loader
     test rax, rax
     jz .load_error
@@ -72,9 +69,8 @@ main:
     jl .skip_color
 
     ; Parser la couleur hexadecimale (argv[2])
-    mov rdi, [r15 + 16]         ; argv[2]
+    mov rdi, [r15 + 16] ;Deuxième argument
     call parse_hex_color
-    ; rax contient la couleur parsee
     mov rdi, rax
     call set_pixel_color
 
@@ -82,23 +78,22 @@ main:
     ; Initialiser l'affichage Raylib
     call init_display
 
-    ; Boucle principale de l'emulateur
 .main_loop:
     ; Verifier si l'utilisateur veut quitter
     call check_quit
     test eax, eax
     jnz .quit
 
-    ; Executer plusieurs cycles par frame (pour une vitesse correcte)
-    mov r12, 10               ; 10 opcodes par frame
+    ; Executer plusieurs cycles par frame
+    mov r12, 10
 
 .cpu_cycle:
     ; Fetch opcode
     call fetch_opcode
     test rax, rax
-    jz .render_frame          ; Si opcode invalide, juste render
+    jz .render_frame
 
-    ; Execute opcode
+    ; Executer opcode
     mov rdi, rax
     call execute_opcode
 
@@ -109,7 +104,6 @@ main:
     ; Afficher le buffer
     call render_display
 
-    ; Delai pour ~60 FPS (gere par Raylib SetTargetFPS)
     jmp .main_loop
 
 .quit:
@@ -155,21 +149,16 @@ main:
     leave
     ret
 
-; ============================================
-; parse_hex_color - Parse une chaine hex en uint32
-; Input: rdi = pointeur vers la chaine (ex: "F23838")
-; Output: rax = valeur 32-bit
-; ============================================
+; parse_hex_color - Parse une chaine hex
 parse_hex_color:
     push rbx
-    xor rax, rax                ; resultat = 0
+    xor rax, rax
 
 .parse_loop:
     movzx rbx, byte [rdi]
-    test bl, bl                 ; Fin de chaine?
+    test bl, bl
     jz .done
 
-    ; Multiplier resultat par 16
     shl rax, 4
 
     ; Convertir le caractere hex

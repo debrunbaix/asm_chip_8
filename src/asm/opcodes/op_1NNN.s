@@ -1,5 +1,3 @@
-; op_1NNN.s - Jump to address NNN (1NNN)
-
 extern PC
 
 global op_jump

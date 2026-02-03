@@ -1,27 +1,36 @@
 extern PC
 extern MEMORY
+
 global fetch_opcode
 global print_opcode
+
 section .data
   opcode_msg: db "Opcode: 0x", 0
   hex_chars: db "0123456789ABCDEF"
   newline: db 10
+
 section .bss
   hex_buffer: resb 5
+
 section .text
+
 fetch_opcode:
   push rbp
   mov  rbp, rsp
+
   ; PC dans RAX
   movzx rax, word [rel PC]
-  ; vérifie que PC soit bien compris dans la ROM chargée.
+
+  ; vérifie que 0x200 < PC < 0xFFE (là ou la ROM est chargée).
   cmp rax, 0x200
   jl .error
   cmp rax, 0xFFE
   jge .error
+
   lea rbx, [rel MEMORY]
   movzx rcx, byte [rbx + rax]
   movzx rdx, byte [rbx + rax + 1]
+
   ; Combiner: opcode = (high << 8) | low
   shl rcx, 8
   or rcx, rdx
@@ -30,10 +39,13 @@ fetch_opcode:
   mov rax, rcx
   leave
   ret
+
   .error:
     xor rax, rax
     leave
     ret
+
+; Focntion de DEBUG pour vérifier le fetch (inutilisé en production)
 print_opcode:
   push rbp
   mov rbp, rsp

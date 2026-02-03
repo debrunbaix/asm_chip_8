@@ -1,5 +1,3 @@
-; op_6XNN.s - Set VX = NN (6XNN)
-
 extern REGISTERS
 
 global op_set_vx

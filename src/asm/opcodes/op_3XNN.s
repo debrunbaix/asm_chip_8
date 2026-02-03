@@ -1,6 +1,3 @@
-; op_3XNN.s - Skip if VX == NN (3XNN)
-; Skip l'instruction suivante si VX == NN
-
 extern REGISTERS
 extern PC
 

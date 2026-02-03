@@ -47,7 +47,7 @@ init_chip8:
 	push rbp
 	mov rbp, rsp
 
-	mov ax, 0x0200
+	mov ax, 0x200
 	mov [rel PC], ax
 	xor eax, eax
 	mov byte [rel CH8_SP], al

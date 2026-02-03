@@ -1,5 +1,3 @@
-; op_ANNN.s - Set I = NNN (ANNN)
-
 extern REG_I
 
 global op_set_i

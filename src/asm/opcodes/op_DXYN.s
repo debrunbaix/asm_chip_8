@@ -1,7 +1,3 @@
-; op_DXYN.s - Draw sprite at (VX, VY) with height N (DXYN)
-; Le sprite est lu depuis MEMORY[I]
-; VF est mis a 1 si un pixel est efface, sinon 0
-
 extern MEMORY
 extern REGISTERS
 extern REG_I

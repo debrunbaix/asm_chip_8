@@ -1,6 +1,3 @@
-; op_2NNN.s - Call subroutine at NNN (2NNN)
-; Empile PC et saute a NNN
-
 extern CH8_SP
 extern STACK
 extern PC
