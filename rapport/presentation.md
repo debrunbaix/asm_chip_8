@@ -16,15 +16,14 @@ Developpement d'un emulateur en assembleur x86-64
 ## Sommaire
 
 1. Qu'est-ce que le CHIP-8 ?
-2. Contraintes du projet
-3. Architecture du projet
-4. Choix techniques
-5. Fonctionnement de l'emulateur
-6. Quelques opcodes interessants
-7. Changement de couleur des pixels
-8. Demonstration
-9. Conclusion
-10. Questions
+2. Architecture du projet
+3. Choix techniques
+4. Fonctionnement de l'emulateur
+5. Quelques opcodes interessants
+6. Fonctionnalitée suplémentaire.
+7. Demonstration
+8. Conclusion
+9. Questions
 
 ---
 
@@ -79,17 +78,6 @@ Developpement d'un emulateur en assembleur x86-64
 
 ---
 
-# Contraintes du projet
-
----
-
-## Contraintes du projet
-
-- Emulateur/logique écrit en **assembleur**
-- Parties graphiques/audio en **C**
-
----
-
 # Architecture du projet
 
 ---
@@ -127,15 +115,15 @@ asm_chip_8/
 
 | Fichier | Rôle |
 |---------|------|
-| `main.s` | Point d'entrée, boucle principale |
-| `chip8_state.s` | État CPU, mémoire, fontset |
-| `cpu.s` | Fetch des opcodes |
-| `rom_loader.s` | Chargement ROM (syscalls) |
-| `dispatcher.s` | Décodage et dispatch |
-| `display.c` | Rendu Raylib |
-| `audio.c` | Beep 440 Hz (sine) |
-| `input.c` | Mapping clavier |
-| `timers.c` | Timers 60 Hz |
+| *main.s* | Point d'entrée, boucle principale |
+| *chip8_state.s* | État CPU, mémoire, fontset |
+| *cpu.s* | Fetch des opcodes |
+| *rom_loader.s* | Chargement ROM (syscalls) |
+| *dispatcher.s* | Décodage et dispatch |
+| *display.c* | Rendu Raylib |
+| *audio.c* | Beep 440 Hz (sine) |
+| *input.c* | Mapping clavier |
+| *timers.c* | Timers 60 Hz |
 
 </div>
 </div>
@@ -209,20 +197,10 @@ asm_chip_8/
 </div>
 <div>
 
-**Raylib**
-- Bibliothèque légère (vs SDL)
-- Gestion fenêtre + audio + input
-- API simple et directe
-
 **Compilation**
 - `nasm` -> objets `.o` (ASM)
 - `gcc` -> objets `.o` (C)
 - `gcc` link tout avec Raylib
-
-```
--lraylib -lGL -lm
--lpthread -ldl -lrt -lX11
-```
 
 </div>
 </div>
@@ -253,7 +231,7 @@ asm_chip_8/
 <div class="columns">
 <div>
 
-Extraction du **premier nibble** 
+Extraction du **premier index** 
 
 | Nibble | Opcodes |
 |--------|---------|
@@ -263,7 +241,6 @@ Extraction du **premier nibble**
 | 6 | 6XNN (Set) |
 | 8 | 8XY0-8XYE |
 | D | DXYN (Draw) |
-| F | FXxx (Timers...) |
 
 </div>
 <div>
@@ -301,16 +278,16 @@ Extraction du **premier nibble**
 
 | Composant | Taille |
 |-----------|--------|
-| `MEMORY` | 4096 octets |
-| `REGISTERS` | 16 octets (V0-VF) |
-| `STACK` | 32 octets (16 × 16 bits) |
-| `CH8_SP` | 1 octet |
-| `PC` | 2 octets |
-| `REG_I` | 2 octets |
-| `KEYPAD` | 16 octets |
-| `DELAY_TIMER` | 1 octet |
-| `SOUND_TIMER` | 1 octet |
-| `DISPLAY` | 256 octets |
+| *MEMORY* | 4096 octets |
+| *REGISTERS* | 16 octets (V0-VF) |
+| *STACK* | 32 octets (16 × 16 bits) |
+| *CH8_SP* | 1 octet |
+| *PC* | 2 octets |
+| *REG_I* | 2 octets |
+| *KEYPAD* | 16 octets |
+| *DELAY_TIMER* | 1 octet |
+| *SOUND_TIMER* | 1 octet |
+| *DISPLAY* | 256 octets |
 
 </div>
 <div>
@@ -430,14 +407,11 @@ La ROM est chargée directement à l'adresse `MEMORY + 0x200`
 
 ---
 
-# Changement de couleur des pixels
+# Fonctionnalité suplémentaire.
 
 ---
 
 ## Changement de couleur des pixels
-
-<div class="columns">
-<div>
 
 **Argument optionnel** au lancement :
 
@@ -445,75 +419,7 @@ La ROM est chargée directement à l'adresse `MEMORY + 0x200`
 ./chip8_emu rom.ch8 F23838
 ```
 
-**Parsing en ASM** (`parse_hex_color`) :
-- Lit chaque caractère (0-9, A-F, a-f)
-- Convertit en nibble (4 bits)
-- Construit `result = (result << 4) | nibble`
-- Résultat : `0xRRGGBB`
-
-</div>
-<div>
-
-**En C** (`set_pixel_color`) :
-- Extrait R, G, B du format hex
-- Alpha = 255 (opaque)
-- Stocke dans variable statique
-
-```c
-void set_pixel_color(uint32_t hex) {
-    pixel_color.r = (hex >> 16) & 0xFF;
-    pixel_color.g = (hex >> 8) & 0xFF;
-    pixel_color.b = hex & 0xFF;
-    pixel_color.a = 255;
-}
-```
-
-Couleur par défaut : **blanc** (0xFFFFFF)
-
-</div>
-</div>
-
----
-
-## Changement de couleur | Rendu
-
-<div class="columns">
-<div>
-
-Pour chaque pixel allumé :
-
-```c
-DrawRectangle(
-    x * 10, y * 10,
-    10, 10,
-    pixel_color
-);
-```
-
-- Scale ×10 : **640×320** pixels réels
-- Fond : **noir**
-- Pixels ON : couleur configurée
-
-</div>
-<div>
-
-<div class="flow">
-<div class="flow-diamond">Couleur fournie ?</div>
-<div class="flow-row">
-<div class="flow-label">Oui ↓</div>
-<div style="width:40px"></div>
-<div class="flow-label">Non ↓</div>
-</div>
-<div class="flow-row">
-<div class="flow-box">parse_hex_color()</div>
-<div style="width:10px"></div>
-<div class="flow-box">Blanc par défaut</div>
-</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">set_pixel_color(0xRRGGBB)</div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box">DrawRectangle avec la couleur</div>
-</div>
+- Couleur par défaut : **blanc** (0xFFFFFF)
 
 </div>
 </div>
@@ -554,7 +460,7 @@ DrawRectangle(
 
 **Difficultés :**
 - Debug assembleur x86-64
-- Interfaçage ASM <-> C
+- Interfaçage ASM / C
 - Respect des conventions d'appel
 
 **Améliorations possibles :**

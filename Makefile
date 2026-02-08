@@ -99,10 +99,10 @@ re: fclean all
 
 # Tester avec une ROM
 test: all
-	./$(NAME)
+	./$(NAME) roms/games/space_invaders.ch8
 
 # Déboguer avec GDB
 debug: all
-	gdb ./$(NAME)
+	gdb ./$(NAME) roms/games/space_invaders.ch8
 
 .PHONY: all clean fclean re test debug
